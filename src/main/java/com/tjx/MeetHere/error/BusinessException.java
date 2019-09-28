@@ -1,13 +1,13 @@
 package com.tjx.MeetHere.error;
 
-public class BussinessException extends Exception implements CommonError {
+public class BusinessException extends Exception implements CommonError {
 
     private CommonError commonError;
 
-    public BussinessException(CommonError commonError) {
+    public BusinessException(CommonError commonError) {
         this.commonError = commonError;
     }
-    public BussinessException(CommonError commonError,String message) {
+    public BusinessException(CommonError commonError,String message) {
         this.commonError = commonError;
         this.commonError.setErrorMessage(message);
     }
