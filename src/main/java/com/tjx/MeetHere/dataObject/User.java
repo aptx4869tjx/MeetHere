@@ -13,9 +13,19 @@ public class User {
 
     private String userName;
 
-    private String telephone;
+    private String email;
 
     private Byte isAdmin;//0代表普通用户，1代表管理员
+
+    private Byte gender;
+
+    public Byte getGender() {
+        return gender;
+    }
+
+    public void setGender(Byte gender) {
+        this.gender = gender;
+    }
 
     public User() {
     }
@@ -36,12 +46,12 @@ public class User {
         this.userName = userName;
     }
 
-    public String getTelephone() {
-        return telephone;
+    public String getEmail() {
+        return email;
     }
 
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Byte getIsAdmin() {

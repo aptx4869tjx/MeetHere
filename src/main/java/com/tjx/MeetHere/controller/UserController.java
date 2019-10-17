@@ -10,6 +10,6 @@ public class UserController {
     @Autowired private UserDao userDao;
     @GetMapping("/")
     public String get(){
-        return userDao.findByUserId(1L).getTelephone();
+        return userDao.findByUserId(1L).getEmail();
     }
 }

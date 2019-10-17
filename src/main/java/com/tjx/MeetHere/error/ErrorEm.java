@@ -5,7 +5,8 @@ public enum ErrorEm implements CommonError{
     UNKNOWN_ERROR(20001,"未知错误"),
     USER_NOT_EXIST(30001,"用户不存在"),
     USER_LOGIN_FAIL(30002,"用户手机号或者密码不正确"),
-    USER_NOT_LOGIN(30003,"用户还未登录")
+    USER_NOT_LOGIN(30003,"用户还未登录"),
+    EMAIL_HAS_REGISTED(40001,"邮箱已经注册，请直接登录")
     ;
 
     private int errorCode;

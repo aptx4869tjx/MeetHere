@@ -24,6 +24,6 @@ class UserDaoTest {
     @Test
     void findByUserId() {
         User user = userDao.findByUserId(1L);
-        Assertions.assertEquals("19916939173",user.getTelephone() );
+        Assertions.assertEquals("tjx",user.getUserName());
     }
 }
