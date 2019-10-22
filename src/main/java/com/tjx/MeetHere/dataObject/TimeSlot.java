@@ -17,7 +17,6 @@ public class TimeSlot {
     public TimeSlot(Long venueId, Byte timeSlot) {
         this.timeSlot = timeSlot;
         this.venueId = venueId;
-
     }
 
     public TimeSlot() {

@@ -14,8 +14,24 @@ public class OccupiedTimeSlot {
     private Byte occupiedTimeSlot;
     private Long venueId;
     private LocalDate date;
+    private Long orderId;
+
+    public OccupiedTimeSlot( Long venueId, LocalDate date, Long orderId,Byte occupiedTimeSlot) {
+        this.occupiedTimeSlot = occupiedTimeSlot;
+        this.venueId = venueId;
+        this.date = date;
+        this.orderId = orderId;
+    }
 
     public OccupiedTimeSlot() {
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public LocalDate getDate() {

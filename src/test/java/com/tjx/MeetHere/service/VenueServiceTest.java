@@ -3,6 +3,7 @@ package com.tjx.MeetHere.service;
 import com.tjx.MeetHere.MeetHereApplication;
 import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.service.model.VenueModel;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ class VenueServiceTest {
     VenueService venueService;
 
     @Test
+    @Disabled
     void createVenue() {
         String venueName = "羽毛球场";
         String description = "华东师范大学 大学生活动中心羽毛球场共有8片场地";
