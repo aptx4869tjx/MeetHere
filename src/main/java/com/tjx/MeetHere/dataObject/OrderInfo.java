@@ -18,11 +18,9 @@ public class OrderInfo {
 
     private Long venueId;
 
-    private LocalDateTime startTime;
+//    private int[] occupiedTimeSlots;
 
-    private LocalDateTime endTime;
-
-    private Byte isChecked;
+    private Byte isChecked;//0表示未审核，1表示审核通过，-1表示审核不通过
 
     public OrderInfo() {
     }
@@ -59,21 +57,13 @@ public class OrderInfo {
         this.venueId = venueId;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
-    }
+//    public int[] getOccupiedTimeSlots() {
+//        return occupiedTimeSlots;
+//    }
+//
+//    public void setOccupiedTimeSlots(int[] occupiedTimeSlots) {
+//        this.occupiedTimeSlots = occupiedTimeSlots;
+//    }
 
     public Byte getIsChecked() {
         return isChecked;

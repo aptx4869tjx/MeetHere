@@ -1,6 +1,6 @@
 package com.tjx.MeetHere.controller.viewObject;
 
-public class UserVo {
+public class UserVO {
     private Long userId;
 
     private String userName;
