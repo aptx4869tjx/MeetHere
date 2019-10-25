@@ -21,6 +21,16 @@ public class Venue {
     private String site;
     private LocalDateTime createTime;
 
+    private String imgUrl;
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }

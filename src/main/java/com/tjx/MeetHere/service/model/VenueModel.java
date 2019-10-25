@@ -29,6 +29,17 @@ public class VenueModel {
 
     private LocalDateTime createTime;
 
+    @NotBlank(message = "场馆图片不能为空")
+    private String imgUrl;
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }

@@ -25,8 +25,8 @@ class OrderServiceTest {
     @Test
     void placeOrder() {
         Long userId = 3L;
-        Long veuneId = 35L;
-        Byte[] occupiedTimeSlots = new Byte[]{17, 18};
+        Long veuneId = 58L;
+        Byte[] occupiedTimeSlots = new Byte[]{17, 18,19};
         LocalDate date = LocalDate.now().plusDays(1);
         assertThrows(BusinessException.class, () -> orderService.placeOrder(null, null, null, null));
         try {

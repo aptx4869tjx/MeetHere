@@ -36,13 +36,14 @@ public class VenueServiceImpl implements VenueService {
 
     @Override
     @Transactional
-    public VenueModel createVenue(String venueName, String description, String site, Double price, Byte[] timeSlots) throws BusinessException {
+    public VenueModel createVenue(String venueName, String description, String site, Double price, Byte[] timeSlots,String imgUrl) throws BusinessException {
         VenueModel venueModel = new VenueModel();
         venueModel.setVenueName(venueName);
         venueModel.setDescription(description);
         venueModel.setSite(site);
         venueModel.setPrice(price);
         venueModel.setTimeSlots(timeSlots);
+        venueModel.setImgUrl(imgUrl);
         ValidationResult result = validator.validate(venueModel);
         if (result.isHasError()) {
             throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, result.getErrorMessage());
@@ -83,6 +84,13 @@ public class VenueServiceImpl implements VenueService {
         }
         venueVO.setOccupiedTimeSlots((Byte[])otss.toArray(new Byte[otss.size()]));
         return venueVO;
+    }
+
+    @Override
+    public List<Venue> getAllVenues() {
+        List<Venue> venues = new ArrayList<>();
+        venues = venueDao.findAll();
+        return venues;
     }
 
     private Venue getVenueFromVenueModel(VenueModel venueModel) {
