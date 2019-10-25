@@ -1,7 +1,10 @@
 package com.tjx.MeetHere.service.Impl;
 
+import com.tjx.MeetHere.controller.viewObject.VenueVO;
+import com.tjx.MeetHere.dao.OccupiedTimeSlotDao;
 import com.tjx.MeetHere.dao.TimeSlotDao;
 import com.tjx.MeetHere.dao.VenueDao;
+import com.tjx.MeetHere.dataObject.OccupiedTimeSlot;
 import com.tjx.MeetHere.dataObject.TimeSlot;
 import com.tjx.MeetHere.dataObject.Venue;
 import com.tjx.MeetHere.error.BusinessException;
@@ -28,6 +31,8 @@ public class VenueServiceImpl implements VenueService {
     VenueDao venueDao;
     @Autowired
     TimeSlotDao timeSlotDao;
+    @Autowired
+    OccupiedTimeSlotDao occupiedTimeSlotDao;
 
     @Override
     @Transactional
@@ -43,15 +48,41 @@ public class VenueServiceImpl implements VenueService {
             throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, result.getErrorMessage());
         }
         venueModel.setCreateTime(LocalDateTime.now());
-        Venue venue= getVenueFromVenueModel(venueModel);
+        Venue venue = getVenueFromVenueModel(venueModel);
         venueDao.save(venue);
         venueModel.setVenueId(venue.getVenueId());
-        List<TimeSlot> timeSlots1= getTimeSlotsFromVenueModel(venueModel);
-        for (TimeSlot t:timeSlots1
-             ) {
+        List<TimeSlot> timeSlots1 = getTimeSlotsFromVenueModel(venueModel);
+        for (TimeSlot t : timeSlots1
+        ) {
             timeSlotDao.save(t);
         }
         return venueModel;
+    }
+
+    @Override
+    public VenueVO getVenueVO(Long venueId, LocalDate date) throws BusinessException {
+        if (venueId == null || date == null) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR);
+        }
+        VenueVO venueVO = new VenueVO();
+        Venue venue = venueDao.findByVenueId(venueId);
+        BeanUtils.copyProperties(venue, venueVO);
+        venueVO.setDate(date);
+        List<TimeSlot> timeSlots = timeSlotDao.findByVenueId(venueId);
+        List<Byte> tss= new ArrayList<>();
+        for (TimeSlot ts:timeSlots
+             ) {
+            tss.add(ts.getTimeSlot());
+        }
+        venueVO.setTimeSlots((Byte[]) tss.toArray(new Byte[tss.size()]));
+        List<OccupiedTimeSlot> occupiedTimeSlots = occupiedTimeSlotDao.findByVenueIdAndDate(venueId,date);
+        List<Byte> otss = new ArrayList<>();
+        for (OccupiedTimeSlot ots:occupiedTimeSlots
+             ) {
+            otss.add(ots.getOccupiedTimeSlot());
+        }
+        venueVO.setOccupiedTimeSlots((Byte[])otss.toArray(new Byte[otss.size()]));
+        return venueVO;
     }
 
     private Venue getVenueFromVenueModel(VenueModel venueModel) {

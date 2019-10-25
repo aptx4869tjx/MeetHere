@@ -5,7 +5,7 @@ import java.time.LocalDate;
 public class VenueVO {
     private Long venueId;
 
-    private String name;
+    private String venueName;
 
     private String description;
 
@@ -15,9 +15,9 @@ public class VenueVO {
 
     private LocalDate date;//日期
 
-    private int[] timeSlots;//开放的所有时段,以24小时计数
+    private Byte[] timeSlots;//开放的所有时段,以24小时计数
 
-    private int[] occupiedTimeSlots;//占用的时段
+    private Byte[] occupiedTimeSlots;//占用的时段
 
     public LocalDate getDate() {
         return date;
@@ -27,19 +27,19 @@ public class VenueVO {
         this.date = date;
     }
 
-    public int[] getTimeSlots() {
+    public Byte[] getTimeSlots() {
         return timeSlots;
     }
 
-    public void setTimeSlots(int[] timeSlots) {
+    public void setTimeSlots(Byte[] timeSlots) {
         this.timeSlots = timeSlots;
     }
 
-    public int[] getOccupiedTimeSlots() {
+    public Byte[] getOccupiedTimeSlots() {
         return occupiedTimeSlots;
     }
 
-    public void setOccupiedTimeSlots(int[] occupiedTimeSlots) {
+    public void setOccupiedTimeSlots(Byte[] occupiedTimeSlots) {
         this.occupiedTimeSlots = occupiedTimeSlots;
     }
 
@@ -51,12 +51,12 @@ public class VenueVO {
         this.venueId = venueId;
     }
 
-    public String getName() {
-        return name;
+    public String getVenueName() {
+        return venueName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setVenueName(String venueName) {
+        this.venueName = venueName;
     }
 
     public String getDescription() {

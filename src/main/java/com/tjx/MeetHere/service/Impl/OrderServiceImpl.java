@@ -50,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
         if (!venueDao.existsByVenueId(venueId)) {
             throw new BusinessException(ErrorEm.VENUE_NOT_EXIST);
         }
-        //判断预约时间是否错误
+        //判断预约时间是否冲突
         for (Byte occupiedTimeSlot : occupiedTimeSlots
         ) {
             if (!validateTimeSlot(occupiedTimeSlot, venueId, date)) {

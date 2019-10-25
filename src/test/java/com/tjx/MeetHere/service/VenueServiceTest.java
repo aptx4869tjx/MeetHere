@@ -1,15 +1,19 @@
 package com.tjx.MeetHere.service;
 
 import com.tjx.MeetHere.MeetHereApplication;
+import com.tjx.MeetHere.controller.viewObject.VenueVO;
 import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.service.model.VenueModel;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = MeetHereApplication.class)
 class VenueServiceTest {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     VenueService venueService;
 
@@ -36,5 +41,17 @@ class VenueServiceTest {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    void getVenueVO() {
+        LocalDate date =LocalDate.now().plusDays(1);
+        try {
+            VenueVO venueVO=venueService.getVenueVO(35L,date);
+            logger.info(String.valueOf(venueVO.getTimeSlots().length));
+            logger.info(String.valueOf(venueVO.getOccupiedTimeSlots().length));
+        } catch (BusinessException e) {
+            e.printStackTrace();
+        }
     }
 }
