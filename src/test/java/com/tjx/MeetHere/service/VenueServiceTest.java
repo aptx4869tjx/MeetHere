@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +32,13 @@ class VenueServiceTest {
         String venueName = "网球场";
         String description = "华东师范大学网球场";
         String site = "华东师范大学大学生活动中心北面楼下";
-        Double price = 50.0;
+        BigDecimal price = new BigDecimal(50);
         String imgUrl = "https://tse2-mm.cn.bing.net/th?id=OIP.i5wzQPMXW_qBtwhynq0XngHaFR&w=255&h=182&c=7&o=5&dpr=2&pid=1.7";
         Byte[] timeSlots = new Byte[]{9, 10, 11, 15, 16, 17, 18, 19};
-        assertThrows(BusinessException.class,()->venueService.createVenue("","","",null,null,imgUrl));
+        assertThrows(BusinessException.class,()->venueService.createVenue(3L,"","","",null,null,imgUrl));
         try {
-            VenueModel venueModel = venueService.createVenue(venueName, description, site, price, timeSlots,imgUrl);
-            assertEquals(50.0,(double)venueModel.getPrice());
+            VenueModel venueModel = venueService.createVenue(3L,venueName, description, site, price, timeSlots,imgUrl);
+            assertEquals(50.0,venueModel.getPrice().doubleValue());
         } catch (BusinessException e) {
             e.printStackTrace();
         }

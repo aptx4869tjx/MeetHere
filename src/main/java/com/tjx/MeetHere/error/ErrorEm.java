@@ -8,7 +8,8 @@ public enum ErrorEm implements CommonError{
     USER_NOT_LOGIN(30003,"用户还未登录"),
     EMAIL_HAS_REGISTED(40001,"邮箱已经注册，请直接登录"),
     VENUE_NOT_EXIST(50001,"场地不存在，不可预约"),
-    VENUE_TIME_IS_OCCUPIED(50002,"预约时间冲突，请更换其他时段")
+    VENUE_TIME_IS_OCCUPIED(50002,"预约时间冲突或者已经过期，请更换其他时段"),
+    PICTURE_UPLOAD_FAIL(60001,"图片上传失败")
     ;
 
     private int errorCode;

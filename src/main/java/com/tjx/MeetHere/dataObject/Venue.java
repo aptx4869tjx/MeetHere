@@ -12,6 +12,8 @@ public class Venue {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private Long venueId;
 
+    private Long userId;
+
     private String description;
 
     private String venueName;
@@ -26,7 +28,13 @@ public class Venue {
     public String getImgUrl() {
         return imgUrl;
     }
+    public Long getUserId() {
+        return userId;
+    }
 
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }

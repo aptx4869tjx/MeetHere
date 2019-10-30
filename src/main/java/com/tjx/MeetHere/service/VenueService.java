@@ -5,11 +5,14 @@ import com.tjx.MeetHere.dataObject.Venue;
 import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.service.model.VenueModel;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public interface VenueService {
-    VenueModel createVenue(String venueName, String description, String site, Double price, Byte[] timeSlots,String imgUrl) throws BusinessException;
+    VenueModel createVenue(Long userId, String venueName, String description, String site, BigDecimal price, Byte[] timeSlots, String imgUrl) throws BusinessException;
+
     VenueVO getVenueVO(Long venueId, LocalDate date) throws BusinessException;
+
     List<Venue> getAllVenues();
 }

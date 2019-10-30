@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR);
         }
         User user = userDao.findByEmail(email);
-        if(user==null){
+        if (user == null) {
             throw new BusinessException(ErrorEm.USER_NOT_EXIST);
         }
 

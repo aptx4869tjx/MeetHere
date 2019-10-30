@@ -3,12 +3,16 @@ package com.tjx.MeetHere.service.model;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 //创建场馆时所需要的全部信息
 public class VenueModel {
     private Long venueId;
+
+    @NotNull(message = "创建者不能为空")
+    private Long userId;
 
     @NotBlank(message = "场馆名称不能为空")
     private String venueName;
@@ -17,13 +21,12 @@ public class VenueModel {
     private String description;
 
     @NotNull(message = "场馆价格不能为空")
-    private Double price;
+    private BigDecimal price;
 
     @NotBlank(message = "场馆地址不能为空")
     private String site;
 
 //    private LocalDate date;//日期
-
     @NotEmpty(message = "场馆开放时段不能为空")
     private Byte[] timeSlots;//开放的所有时段,以24小时计数
 
@@ -31,6 +34,14 @@ public class VenueModel {
 
     @NotBlank(message = "场馆图片不能为空")
     private String imgUrl;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getImgUrl() {
         return imgUrl;
@@ -77,11 +88,11 @@ public class VenueModel {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

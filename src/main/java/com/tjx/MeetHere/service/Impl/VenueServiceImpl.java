@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,10 +35,15 @@ public class VenueServiceImpl implements VenueService {
     @Autowired
     OccupiedTimeSlotDao occupiedTimeSlotDao;
 
+
     @Override
     @Transactional
-    public VenueModel createVenue(String venueName, String description, String site, Double price, Byte[] timeSlots,String imgUrl) throws BusinessException {
+    public VenueModel createVenue(Long userId, String venueName, String description, String site, BigDecimal price, Byte[] timeSlots, String imgUrl) throws BusinessException {
+        if (userId == null) {
+            throw new BusinessException(ErrorEm.USER_NOT_LOGIN);
+        }
         VenueModel venueModel = new VenueModel();
+        venueModel.setUserId(userId);
         venueModel.setVenueName(venueName);
         venueModel.setDescription(description);
         venueModel.setSite(site);
@@ -70,19 +76,19 @@ public class VenueServiceImpl implements VenueService {
         BeanUtils.copyProperties(venue, venueVO);
         venueVO.setDate(date);
         List<TimeSlot> timeSlots = timeSlotDao.findByVenueId(venueId);
-        List<Byte> tss= new ArrayList<>();
-        for (TimeSlot ts:timeSlots
-             ) {
+        List<Byte> tss = new ArrayList<>();
+        for (TimeSlot ts : timeSlots
+        ) {
             tss.add(ts.getTimeSlot());
         }
         venueVO.setTimeSlots((Byte[]) tss.toArray(new Byte[tss.size()]));
-        List<OccupiedTimeSlot> occupiedTimeSlots = occupiedTimeSlotDao.findByVenueIdAndDate(venueId,date);
+        List<OccupiedTimeSlot> occupiedTimeSlots = occupiedTimeSlotDao.findByVenueIdAndDate(venueId, date);
         List<Byte> otss = new ArrayList<>();
-        for (OccupiedTimeSlot ots:occupiedTimeSlots
-             ) {
+        for (OccupiedTimeSlot ots : occupiedTimeSlots
+        ) {
             otss.add(ots.getOccupiedTimeSlot());
         }
-        venueVO.setOccupiedTimeSlots((Byte[])otss.toArray(new Byte[otss.size()]));
+        venueVO.setOccupiedTimeSlots((Byte[]) otss.toArray(new Byte[otss.size()]));
         return venueVO;
     }
 
@@ -99,6 +105,7 @@ public class VenueServiceImpl implements VenueService {
         }
         Venue venue = new Venue();
         BeanUtils.copyProperties(venueModel, venue);
+        venue.setPrice(venueModel.getPrice().doubleValue());
         return venue;
     }
 
