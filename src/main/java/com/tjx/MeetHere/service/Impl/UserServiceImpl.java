@@ -9,8 +9,12 @@ import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.error.ErrorEm;
 import com.tjx.MeetHere.service.UserService;
 import com.tjx.MeetHere.service.model.UserModel;
+import com.tjx.MeetHere.service.model.UserShiro;
 import com.tjx.MeetHere.validator.ValidationResult;
 import com.tjx.MeetHere.validator.ValidatorImpl;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +34,23 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findByUserId(userId);
         UserLogin userLogin = userLoginDao.findByUserId(userId);
         return convertFromUserAndUserLogin(user, userLogin);
+    }
+
+    @Override
+    public UserShiro getUserShiroByEmail(String email) {
+        if (email == null) {
+            return null;
+        }
+        UserShiro userShiro = new UserShiro();
+        Long userId = userDao.selectUserIdByEmail(email);
+        UserLogin userLogin = userLoginDao.findByUserId(userId);
+        if (userLogin == null) {
+            return null;
+        }
+        userShiro.setEmail(email);
+        userShiro.setEncryptPassword(userLogin.getEncryptPassword());
+        userShiro.setRole(userDao.selectRoleByUserId(userId));
+        return userShiro;
     }
 
     @Override
@@ -63,14 +84,17 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new BusinessException(ErrorEm.USER_NOT_EXIST);
         }
-
-        UserLogin userLogin = userLoginDao.findByUserId(user.getUserId());
-        String encryptPassword = MeetHereApplication.getMD5(password);
-        if (encryptPassword.equals(userLogin.getEncryptPassword())) {
-            return convertFromUserAndUserLogin(user, userLogin);
-        } else {
+        UsernamePasswordToken token = new UsernamePasswordToken(email, password + "/" + MeetHereApplication.salt);
+        Subject subject = SecurityUtils.getSubject();
+        try {
+            subject.login(token);
+        } catch (Exception e) {
             throw new BusinessException(ErrorEm.USER_LOGIN_FAIL);
         }
+
+        UserLogin userLogin = userLoginDao.findByUserId(user.getUserId());
+        return convertFromUserAndUserLogin(user, userLogin);
+
     }
 
     private UserModel convertFromUserAndUserLogin(User user, UserLogin userLogin) {

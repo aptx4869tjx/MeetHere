@@ -7,6 +7,9 @@ import com.tjx.MeetHere.response.CommonReturnType;
 import com.tjx.MeetHere.service.Impl.UserServiceImpl;
 import com.tjx.MeetHere.service.UserService;
 import com.tjx.MeetHere.service.model.UserModel;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,15 +44,27 @@ public class UserController extends BaseController {
     public CommonReturnType login(@RequestBody Map<String, Object> params) throws BusinessException {
         String email = (String) params.get("email");
         String password = (String) params.get("password");
+
         UserModel userModel = userService.validateLogin(email, password);
+        //password = MeetHereApplication.getMD5(password);
+//        UsernamePasswordToken token = new UsernamePasswordToken(email, password+"/"+MeetHereApplication.salt);
+//        Subject subject = SecurityUtils.getSubject();
+//        try {
+//            subject.login(token);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         this.httpServletRequest.getSession().setAttribute("isLogin", true);
         this.httpServletRequest.getSession().setAttribute("loginUser", userModel);
         return new CommonReturnType(userModel);
     }
 
-    @RequestMapping(method = RequestMethod.POST,value = "/logout")
-    public CommonReturnType logout(){
-        httpServletRequest.getSession().invalidate();
+    @RequestMapping(method = RequestMethod.POST, value = "/logout")
+    public CommonReturnType logout() {
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            subject.logout();
+        }
         return new CommonReturnType(null);
     }
 

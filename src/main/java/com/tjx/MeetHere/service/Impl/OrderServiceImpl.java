@@ -1,5 +1,6 @@
 package com.tjx.MeetHere.service.Impl;
 
+import com.google.common.primitives.Bytes;
 import com.tjx.MeetHere.controller.viewObject.OrderVO;
 import com.tjx.MeetHere.dao.OccupiedTimeSlotDao;
 import com.tjx.MeetHere.dao.OrderInfoDao;
@@ -15,6 +16,7 @@ import com.tjx.MeetHere.service.model.OrderModel;
 import com.tjx.MeetHere.service.model.UserModel;
 import com.tjx.MeetHere.validator.ValidationResult;
 import com.tjx.MeetHere.validator.ValidatorImpl;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +97,8 @@ public class OrderServiceImpl implements OrderService {
             Venue venue = venueDao.findByVenueId(orderInfo.getVenueId());
             orderVO.setVenueName(venue.getVenueName());
             orderVO.setVenueSite(venue.getSite());
-            Byte[] occupiedTimeSlots = occupiedTimeSlotDao.selectOccupiedTimeSlotsByOrderId(orderInfo.getOrderId()).toArray(Byte[]::new);
+            byte[] occupiedTimeSlots = Bytes.toArray(occupiedTimeSlotDao.selectOccupiedTimeSlotsByOrderId(orderInfo.getOrderId()));
+//            Byte[] occupiedTimeSlots = occupiedTimeSlotDao.selectOccupiedTimeSlotsByOrderId(orderInfo.getOrderId()).toArray(Byte[]::new);
             orderVO.setSelectedSlots(occupiedTimeSlots);
             orderVOS.add(orderVO);
         }

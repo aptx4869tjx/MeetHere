@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -87,9 +88,16 @@ public class VenueController extends BaseController {
         Byte[] tss = parse(timeSlots);
         String newName = RandomUUID();
         Map<String, String> result = pictureService.uploadPicture(file, newName + ".png");
+        //TODO
+        //项目运行在本地时调用ftp上传，在服务器上时调用下面的注释方法
         if (result.get("error").equals("1")) {
             throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
         }
+//        try {
+//            pictureService.uploadFile(file.getBytes(),newName+".png");
+//        } catch (IOException e) {
+//            throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
+//        }
         String imgUrl = "http://47.102.142.229:/" + newName + ".png";
         venueService.createVenue(userModel.getUserId(), venueName, description, site, price, tss, imgUrl);
         return new CommonReturnType(null);

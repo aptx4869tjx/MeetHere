@@ -61,7 +61,7 @@ class UserServiceImplTest {
         assertThrows(BusinessException.class, () -> userService.validateLogin(email, "1234"));
         try {
             UserModel userModel = userService.validateLogin(email, password);
-            assertEquals(userModel.getUserName(),"tjx");
+            assertEquals(userModel.getUserName(), "tjx");
         } catch (BusinessException e) {
             e.printStackTrace();
         }

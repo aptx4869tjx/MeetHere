@@ -12,7 +12,7 @@ public class OrderVO {
 
     private String venueSite;
 
-    private Byte[] selectedSlots;
+    private byte[] selectedSlots;
 
     public Long getOrderId() {
         return orderId;
@@ -48,11 +48,11 @@ public class OrderVO {
         this.venueSite = venueSite;
     }
 
-    public Byte[] getSelectedSlots() {
+    public byte[] getSelectedSlots() {
         return selectedSlots;
     }
 
-    public void setSelectedSlots(Byte[] selectedSlots) {
+    public void setSelectedSlots(byte[] selectedSlots) {
         this.selectedSlots = selectedSlots;
     }
 }

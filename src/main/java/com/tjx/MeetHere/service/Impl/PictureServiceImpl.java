@@ -1,14 +1,14 @@
 package com.tjx.MeetHere.service.Impl;
 
 import com.tjx.MeetHere.service.PictureService;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,8 +19,11 @@ public class PictureServiceImpl implements PictureService {
     private String FTP_USERNAME="root";
     private String FTP_PASSWORD="200812";
     private String FTP_BASE_PATH="/html/images";
-    private String IMAGE_BASE_URL="http://47.102.142.229:8008/";
+    private String IMAGE_BASE_URL="http://47.102.142.229:/";
 
+    String filePath = "/www/server/nginx/html/images/";
+
+    //ftp上传到服务器
     @Override
     public Map uploadPicture(MultipartFile uploadFile,String newName) {
         Map resultMap = new HashMap<>();
@@ -48,6 +51,25 @@ public class PictureServiceImpl implements PictureService {
             resultMap.put("error", "1");
             resultMap.put("message", "upload Fail");
             return resultMap;
+        }
+    }
+
+
+    //项目部署到服务器后，直接保存到指定目录。
+    @Override
+    public void uploadFile(byte[] file, String fileName) throws IOException {
+        //TODO
+        try {
+//            byte[] sourceBytes = data.getBytes("UTF-8");
+            if(null!=file){
+                FileUtils.writeByteArrayToFile( new File(filePath+fileName), file,false);//这里的false代表写入的文件是从头开始重新写入，或者理解为清空文件内容后重新写；若为true,则是接着原本文件内容的结尾开始写
+            }
+        } catch (UnsupportedEncodingException e) {
+            // do something
+        } catch (IOException e){
+            // do something
+        } finally {
+            // do something
         }
     }
 
