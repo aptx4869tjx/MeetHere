@@ -19,4 +19,10 @@ public interface UserDao extends JpaRepository<User, Long> {
 
     @Query(value = "select U.isAdmin from User as U where U.userId=:userId")
     public byte selectRoleByUserId(@Param("userId") Long userId);
+
+    @Query(value = "select U.email from User as U where U.userId=:userId")
+    public String getEmailByUserId(@Param("userId")Long userId);
+
+    @Query(value = "select U.userName from User as U where U.userId=:userId")
+    public String getUsernameByUserId(@Param("userId")Long userId);
 }

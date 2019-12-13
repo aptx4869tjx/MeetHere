@@ -17,4 +17,11 @@ public interface OccupiedTimeSlotDao extends JpaRepository<OccupiedTimeSlot, Lon
 
     @Query(value = "select O.occupiedTimeSlot from OccupiedTimeSlot as O where O.orderId=:orderId")
     List<Byte> selectOccupiedTimeSlotsByOrderId(@Param("orderId") Long orderId);
+
+    @Query(value = "select O.date from OccupiedTimeSlot as O where O.orderId=:orderId")
+    List<LocalDate> selectReservationDateByOrderId(@Param("orderId") Long orderId);
+
+
+    @Query(value = "select count(O.occupiedTimeSlot) from OccupiedTimeSlot as O where O.date=:date and O.venueId=:venueId")
+    Integer getSlotCountByDateAndVenueId(@Param("date") LocalDate date, @Param("venueId") Long venueId);
 }

@@ -15,4 +15,6 @@ public interface VenueService {
     VenueVO getVenueVO(Long venueId, LocalDate date) throws BusinessException;
 
     List<Venue> getAllVenues();
+
+    boolean updateVenueInfo(Long venueId, Venue venue, String imgUrl) throws BusinessException;
 }

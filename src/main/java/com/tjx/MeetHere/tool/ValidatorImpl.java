@@ -1,4 +1,4 @@
-package com.tjx.MeetHere.validator;
+package com.tjx.MeetHere.tool;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;

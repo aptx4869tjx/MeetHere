@@ -1,6 +1,7 @@
 package com.tjx.MeetHere.service.model;
 
 import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -22,6 +23,16 @@ public class OrderModel {
 
     @NotNull(message = "预约日期不能为空")
     private LocalDate date;//预约日期
+
+    private BigDecimal price;
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
     public LocalDate getDate() {
         return date;

@@ -11,8 +11,8 @@ import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.error.ErrorEm;
 import com.tjx.MeetHere.service.VenueService;
 import com.tjx.MeetHere.service.model.VenueModel;
-import com.tjx.MeetHere.validator.ValidationResult;
-import com.tjx.MeetHere.validator.ValidatorImpl;
+import com.tjx.MeetHere.tool.ValidationResult;
+import com.tjx.MeetHere.tool.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -73,6 +73,9 @@ public class VenueServiceImpl implements VenueService {
         }
         VenueVO venueVO = new VenueVO();
         Venue venue = venueDao.findByVenueId(venueId);
+        if (venue == null) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR);
+        }
         BeanUtils.copyProperties(venue, venueVO);
         venueVO.setDate(date);
         List<TimeSlot> timeSlots = timeSlotDao.findByVenueId(venueId);
@@ -81,7 +84,7 @@ public class VenueServiceImpl implements VenueService {
         ) {
             tss.add(ts.getTimeSlot());
         }
-        venueVO.setTimeSlots((Byte[]) tss.toArray(new Byte[tss.size()]));
+        venueVO.setTimeSlots(tss.toArray(new Byte[tss.size()]));
         List<OccupiedTimeSlot> occupiedTimeSlots = occupiedTimeSlotDao.findByVenueIdAndDate(venueId, date);
         List<Byte> otss = new ArrayList<>();
         for (OccupiedTimeSlot ots : occupiedTimeSlots
@@ -94,9 +97,37 @@ public class VenueServiceImpl implements VenueService {
 
     @Override
     public List<Venue> getAllVenues() {
-        List<Venue> venues = new ArrayList<>();
+        List<Venue> venues;
         venues = venueDao.findAll();
+//        List<VenueVO> venueVOS = new ArrayList<>();
         return venues;
+    }
+
+    @Override
+    public boolean updateVenueInfo(Long venueId, Venue venue, String imgUrl) throws BusinessException{
+        String venueName = venue.getVenueName();
+        String site = venue.getSite();
+        String description = venue.getDescription();
+        Double price = venue.getPrice();
+        if (venueName == null || venueName.equals("")) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, "场地名不能为空");
+        }
+        if (site == null || site.equals("")) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, "场地地址不能为空");
+        }
+        if (description == null || description.equals("")) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, "场地描述不能为空");
+        }
+        if (price == null) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, "场地价格不能为空");
+        }
+        int result = 0;
+        if (imgUrl == null) {
+            result = venueDao.updateVenueInfo(venueId, venueName, site, description, price);
+        } else {
+            result = venueDao.updateVenueInfoWithImage(venueId, venueName, site, description, price, imgUrl);
+        }
+        return result != 0;
     }
 
     private Venue getVenueFromVenueModel(VenueModel venueModel) {

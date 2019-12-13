@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -18,11 +19,20 @@ public class OrderInfo {
 
     private Long venueId;
 
-//    private int[] occupiedTimeSlots;
+    private Double price;
+
 
     private Byte isChecked;//0表示未审核，1表示审核通过，-1表示审核不通过
 
     public OrderInfo() {
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public Long getOrderId() {
@@ -57,13 +67,6 @@ public class OrderInfo {
         this.venueId = venueId;
     }
 
-//    public int[] getOccupiedTimeSlots() {
-//        return occupiedTimeSlots;
-//    }
-//
-//    public void setOccupiedTimeSlots(int[] occupiedTimeSlots) {
-//        this.occupiedTimeSlots = occupiedTimeSlots;
-//    }
 
     public Byte getIsChecked() {
         return isChecked;

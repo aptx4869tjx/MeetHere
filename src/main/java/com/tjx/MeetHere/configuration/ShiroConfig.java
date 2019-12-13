@@ -26,10 +26,13 @@ public class ShiroConfig {
         //以下是过滤链，按顺序过滤，所以/**需要放最后
         //开放的静态资源
         filterChainDefinitionMap.put("/user/login", "anon");
+        filterChainDefinitionMap.put("/user/register", "anon");
         //filterChainDefinitionMap.put("/user/logout","anon,logout");
         filterChainDefinitionMap.put("/favicon.ico", "anon");//网站图标
         filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        shiroFilterFactoryBean.setLoginUrl("/user/notLogin");
+        //shiroFilterFactoryBean.setUnauthorizedUrl("/user/unauthorized");
         System.out.println("shiro配置");
         return shiroFilterFactoryBean;
     }
@@ -56,6 +59,7 @@ public class ShiroConfig {
         MyRealm myRealm = new MyRealm();
         return myRealm;
     }
+
     @Bean
     public FilterRegistrationBean<CorsFilter> corsFilter() {
 //        //跨域的header设置

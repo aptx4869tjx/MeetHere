@@ -1,5 +1,6 @@
 package com.tjx.MeetHere.service;
 
+import com.alibaba.fastjson.JSON;
 import com.tjx.MeetHere.MeetHereApplication;
 import com.tjx.MeetHere.controller.viewObject.OrderVO;
 import com.tjx.MeetHere.error.BusinessException;
@@ -19,7 +20,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -47,7 +50,6 @@ class OrderServiceTest {
 
     @Test
     void testFtpClient() throws IOException {
-        System.out.println(testRandomUUID());
         // 1. 创建一个FtpClient对象
         FTPClient ftpClient = new FTPClient();
         // 2. 创建 ftp 连接
@@ -61,9 +63,15 @@ class OrderServiceTest {
         System.out.println(ftpClient.printWorkingDirectory());
 //        ftpClient.enterLocalPassiveMode();
         // 6. 修改上传文件的格式为二进制
+        ftpClient.enterLocalPassiveMode();
         ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
         // 7. 服务器存储文件，第一个参数是存储在服务器的文件名，第二个参数是文件流
-        ftpClient.storeFile("2.png", inputStream);
+        try {
+            ftpClient.storeFile("3.png", inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         System.out.println(ftpClient.printWorkingDirectory());
         // 8. 关闭连接
         ftpClient.logout();
@@ -77,8 +85,38 @@ class OrderServiceTest {
 
     @Test
     void getOrderByUserId() {
-        Long userId = 3L;
+        Long userId = 164L;
         List<OrderVO> orderVOS = orderService.getOrderByUserId(userId);
         System.out.println(orderVOS.size());
+    }
+
+    @Test
+    void getAllOrders() {
+    }
+
+    @Test
+    void getStatistics() {
+        List<Long> venueIds = new ArrayList<>();
+        venueIds.add(35L);
+        venueIds.add(48L);
+        List<Map<Object, Object>> result = orderService.getStatistics(venueIds, LocalDate.now().minusDays(3),
+                LocalDate.now().plusDays(1));
+        System.out.println(JSON.toJSONString(result));
+        for (Map m : result) {
+            System.out.println(m.keySet());
+            System.out.println(m.values());
+
+        }
+    }
+
+    @Test
+    void defaultGetStatistics() {
+        List<Map<Object, Object>> result = orderService.defaultGetStatistics();
+        System.out.println(JSON.toJSONString(result));
+        for (Map m : result) {
+            System.out.println(m.keySet());
+            System.out.println(m.values());
+
+        }
     }
 }

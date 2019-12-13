@@ -10,13 +10,13 @@ import com.tjx.MeetHere.service.OrderService;
 import com.tjx.MeetHere.service.PictureService;
 import com.tjx.MeetHere.service.VenueService;
 import com.tjx.MeetHere.service.model.UserModel;
-import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,9 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+
 @RestController
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 public class VenueController extends BaseController {
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private VenueService venueService;
     @Autowired
@@ -37,12 +39,14 @@ public class VenueController extends BaseController {
     @Autowired
     HttpServletRequest httpServletRequest;
 
+    //获取所有场馆的基本信息
     @RequestMapping(method = RequestMethod.GET, value = "/venues")
     public CommonReturnType getAllVenues() {
         List<Venue> venues = venueService.getAllVenues();
         return new CommonReturnType(venues);
     }
 
+    //获取场馆的空闲信息
     @RequestMapping(method = RequestMethod.GET, value = "/venue/{venueId}")
     public CommonReturnType getVenueByVenueId(@PathVariable("venueId") Long venueId) throws BusinessException {
         LocalDate localDate = LocalDate.now();
@@ -63,7 +67,8 @@ public class VenueController extends BaseController {
             throw new BusinessException(ErrorEm.USER_NOT_LOGIN);
         }
         UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("loginUser");
-        System.out.println(params.get("selectedTimeSlots"));
+        logger.info(params.get("selectedTimeSlots").toString());
+//        System.out.println(params.get("selectedTimeSlots"));
         String s = params.get("selectedTimeSlots").toString();
         Byte[] byteObjects = parse(s);
         LocalDate date = LocalDate.parse(params.get("date").toString(), DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
@@ -87,20 +92,31 @@ public class VenueController extends BaseController {
         UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("loginUser");
         Byte[] tss = parse(timeSlots);
         String newName = RandomUUID();
-        Map<String, String> result = pictureService.uploadPicture(file, newName + ".png");
+        String imgUrl = pictureService.uploadPicture(file, newName + ".png");
         //TODO
         //项目运行在本地时调用ftp上传，在服务器上时调用下面的注释方法
-        if (result.get("error").equals("1")) {
-            throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
-        }
-//        try {
-//            pictureService.uploadFile(file.getBytes(),newName+".png");
-//        } catch (IOException e) {
-//            throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
-//        }
-        String imgUrl = "http://47.102.142.229:/" + newName + ".png";
+//        pictureService.uploadFile(file, newName + ".png");
+
+//        String imgUrl = "http://47.102.142.229:/" + newName + ".png";
         venueService.createVenue(userModel.getUserId(), venueName, description, site, price, tss, imgUrl);
         return new CommonReturnType(null);
+    }
+
+
+    //更新场馆的信息
+    @PutMapping("/venues/{venueId}")
+    public CommonReturnType updateVenueInfo(@PathVariable("venueId") Long venueId,
+                                            Venue venue, @RequestParam(value = "photo", required = false) MultipartFile image) {
+        String imgUrl = null;
+        if (image != null) {
+            String newName = RandomUUID();
+            imgUrl = pictureService.uploadPicture(image, newName + ".png");
+        }
+        boolean result = venueService.updateVenueInfo(venueId, venue, imgUrl);
+        if (result)
+            return new CommonReturnType(null);
+        else
+            throw new BusinessException(ErrorEm.VENUE_UPDATE_FAIL);
     }
 
     private Byte[] parse(String s) {

@@ -13,7 +13,7 @@ public class VenueVO {
 
     private String site;
 
-    private LocalDate date;//日期
+    private LocalDate date;//具体日期，与occupiedTimeSlots共同表示，一天中被占用的时段。
 
     private Byte[] timeSlots;//开放的所有时段,以24小时计数
 

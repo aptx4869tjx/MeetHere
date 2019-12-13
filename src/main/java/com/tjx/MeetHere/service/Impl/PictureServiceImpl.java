@@ -1,5 +1,7 @@
 package com.tjx.MeetHere.service.Impl;
 
+import com.tjx.MeetHere.error.BusinessException;
+import com.tjx.MeetHere.error.ErrorEm;
 import com.tjx.MeetHere.service.PictureService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTP;
@@ -16,65 +18,47 @@ import java.util.Map;
 public class PictureServiceImpl implements PictureService {
     private String FTP_ADDRESS = "47.102.142.229";
     private Integer FTP_PORT = 21;
-    private String FTP_USERNAME="root";
-    private String FTP_PASSWORD="200812";
-    private String FTP_BASE_PATH="/html/images";
-    private String IMAGE_BASE_URL="http://47.102.142.229:/";
+    private String FTP_USERNAME = "root";
+    private String FTP_PASSWORD = "200812";
+    private String FTP_BASE_PATH = "/html/images";
+    private String IMAGE_BASE_URL = "http://47.102.142.229:/";
 
     String filePath = "/www/server/nginx/html/images/";
 
     //ftp上传到服务器
     @Override
-    public Map uploadPicture(MultipartFile uploadFile,String newName) {
-        Map resultMap = new HashMap<>();
+    public String uploadPicture(MultipartFile uploadFile, String newName) throws BusinessException {
+        Map<String, String> resultMap = new HashMap<>();
+        boolean result = false;
         try {
-            // 1. 取原始文件名
-//            String oldName = uploadFile.getOriginalFilename();
-
-            // 2. ftp 服务器的文件名
-            //String newName = oldName;
-            //图片上传
-            boolean result = uploadFile(FTP_ADDRESS, FTP_PORT, FTP_USERNAME, FTP_PASSWORD,
+            result = uploadFile(FTP_ADDRESS, FTP_PORT, FTP_USERNAME, FTP_PASSWORD,
                     uploadFile.getInputStream(), FTP_BASE_PATH, newName);
             //返回结果
-            if(!result) {
-                resultMap.put("error", "1");
-                resultMap.put("message", "upload Fail");
-                return resultMap;
+            if (!result) {
+                throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
             }
-            resultMap.put("error", "0");
-            resultMap.put("url", IMAGE_BASE_URL+ newName);
-            return resultMap;
-
+            return IMAGE_BASE_URL+newName;
         } catch (Exception e) {
             e.printStackTrace();
-            resultMap.put("error", "1");
-            resultMap.put("message", "upload Fail");
-            return resultMap;
+            throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
         }
     }
 
 
     //项目部署到服务器后，直接保存到指定目录。
     @Override
-    public void uploadFile(byte[] file, String fileName) throws IOException {
+    public void uploadFile(MultipartFile uploadFile, String fileName) throws BusinessException {
         //TODO
         try {
-//            byte[] sourceBytes = data.getBytes("UTF-8");
-            if(null!=file){
-                FileUtils.writeByteArrayToFile( new File(filePath+fileName), file,false);//这里的false代表写入的文件是从头开始重新写入，或者理解为清空文件内容后重新写；若为true,则是接着原本文件内容的结尾开始写
-            }
-        } catch (UnsupportedEncodingException e) {
-            // do something
-        } catch (IOException e){
-            // do something
-        } finally {
-            // do something
+            byte[] file = uploadFile.getBytes();
+            FileUtils.writeByteArrayToFile(new File(filePath + fileName), file, false);//这里的false代表写入的文件是从头开始重新写入，或者理解为清空文件内容后重新写；若为true,则是接着原本文件内容的结尾开始写
+        } catch (IOException e) {
+            throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
         }
     }
 
     public boolean uploadFile(String ip, Integer port, String account, String passwd,
-                              InputStream inputStream, String workingDir, String fileName) throws Exception{
+                              InputStream inputStream, String workingDir, String fileName) throws Exception {
         boolean result = false;
         // 1. 创建一个FtpClient对象
         FTPClient ftpClient = new FTPClient();
@@ -89,6 +73,7 @@ public class PictureServiceImpl implements PictureService {
                 ftpClient.disconnect(); // 如果返回状态不再 200 ~ 300 则认为连接失败
                 return result;
             }
+            ftpClient.enterLocalPassiveMode();
             // 4. 读取本地文件
 //          FileInputStream inputStream = new FileInputStream(new File("F:\\hello.png"));
             // 5. 设置上传的路径
@@ -105,11 +90,12 @@ public class PictureServiceImpl implements PictureService {
             result = true;
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             // FIXME 听说，项目里面最好少用try catch 捕获异常，这样会导致Spring的事务回滚出问题？？？难道之前写的代码都是假代码！！！
             if (ftpClient.isConnected()) {
                 try {
                     ftpClient.disconnect();
+                    System.out.println("ftp关闭");
                 } catch (IOException ioe) {
                 }
             }

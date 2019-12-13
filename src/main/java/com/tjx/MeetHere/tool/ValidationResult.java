@@ -1,4 +1,4 @@
-package com.tjx.MeetHere.validator;
+package com.tjx.MeetHere.tool;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;

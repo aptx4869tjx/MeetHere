@@ -25,6 +25,13 @@ public class UserController extends BaseController {
     @Autowired
     HttpServletRequest httpServletRequest;
 
+    @RequestMapping("/notLogin")
+    public CommonReturnType notLogin() {
+        System.out.println("用户未登录");
+        return new CommonReturnType("failed", "notLogin");
+    }
+
+
     @RequestMapping(method = RequestMethod.POST, value = "/register")
     public CommonReturnType register(@RequestBody Map<String, Object> params) throws BusinessException {
         String username = (String) params.get("username");

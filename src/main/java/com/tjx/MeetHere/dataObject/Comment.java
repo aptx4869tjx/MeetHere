@@ -18,9 +18,19 @@ public class Comment {
 
     private Long venueId;
 
-    private Byte isChecked;
+    private Byte isChecked;//0表示未审核，1表示审核通过，2表示审核不通过
+
+    private String content;
 
     public Comment() {
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Long getCommentId() {

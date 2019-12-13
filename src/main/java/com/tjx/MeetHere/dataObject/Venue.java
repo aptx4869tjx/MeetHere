@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Venue {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long venueId;
 
     private Long userId;
@@ -21,6 +21,7 @@ public class Venue {
     private Double price;
 
     private String site;
+
     private LocalDateTime createTime;
 
     private String imgUrl;
@@ -28,6 +29,7 @@ public class Venue {
     public String getImgUrl() {
         return imgUrl;
     }
+
     public Long getUserId() {
         return userId;
     }
@@ -35,6 +37,7 @@ public class Venue {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
     }
