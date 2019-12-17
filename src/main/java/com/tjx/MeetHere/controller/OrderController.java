@@ -51,13 +51,10 @@ public class OrderController extends BaseController {
         if (params.size() == 0) {
             return new CommonReturnType(orderService.defaultGetStatistics());
         }
-        //TODO
-        //接收前端的起止日期
         if(params.get("venueIdList")==null){
             throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"查询场馆不能为空");
         }
         String venueIdList = params.get("venueIdList").toString();
-
         String day1 = (String) params.get("startDate");
         String day2 = (String) params.get("endDate");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy年MM月dd日");

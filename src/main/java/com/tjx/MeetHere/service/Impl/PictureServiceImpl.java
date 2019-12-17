@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class PictureServiceImpl implements PictureService {
@@ -37,7 +38,7 @@ public class PictureServiceImpl implements PictureService {
             if (!result) {
                 throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
             }
-            return IMAGE_BASE_URL+newName;
+            return IMAGE_BASE_URL + newName;
         } catch (Exception e) {
             e.printStackTrace();
             throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
@@ -55,6 +56,11 @@ public class PictureServiceImpl implements PictureService {
         } catch (IOException e) {
             throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
         }
+    }
+
+    @Override
+    public String RandomUUID() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 
     public boolean uploadFile(String ip, Integer port, String account, String passwd,

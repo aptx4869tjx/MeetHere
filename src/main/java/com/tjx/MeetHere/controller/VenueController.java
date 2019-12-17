@@ -91,7 +91,7 @@ public class VenueController extends BaseController {
         }
         UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("loginUser");
         Byte[] tss = parse(timeSlots);
-        String newName = RandomUUID();
+        String newName = pictureService.RandomUUID();
         String imgUrl = pictureService.uploadPicture(file, newName + ".png");
         //TODO
         //项目运行在本地时调用ftp上传，在服务器上时调用下面的注释方法
@@ -109,7 +109,7 @@ public class VenueController extends BaseController {
                                             Venue venue, @RequestParam(value = "photo", required = false) MultipartFile image) {
         String imgUrl = null;
         if (image != null) {
-            String newName = RandomUUID();
+            String newName = pictureService.RandomUUID();
             imgUrl = pictureService.uploadPicture(image, newName + ".png");
         }
         boolean result = venueService.updateVenueInfo(venueId, venue, imgUrl);
@@ -136,7 +136,4 @@ public class VenueController extends BaseController {
         return bytes;
     }
 
-    private String RandomUUID() {
-        return UUID.randomUUID().toString().replace("-", "");
-    }
 }

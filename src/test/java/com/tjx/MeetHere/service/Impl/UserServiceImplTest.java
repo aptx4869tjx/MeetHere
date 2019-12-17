@@ -1,6 +1,7 @@
 package com.tjx.MeetHere.service.Impl;
 
 import com.tjx.MeetHere.MeetHereApplication;
+import com.tjx.MeetHere.controller.viewObject.NewsVO;
 import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.service.UserService;
 import com.tjx.MeetHere.service.model.UserModel;
@@ -12,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -64,5 +67,35 @@ class UserServiceImplTest {
         } catch (BusinessException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    void getUserShiroByEmail() {
+    }
+
+    @Test
+    void publishNews() {
+    }
+
+    @Test
+    void uploadNewsImage() {
+    }
+
+    @Test
+    void getNewsVO() {
+
+    }
+
+    @Test
+    void testGetNewsVO() {
+        Integer page = 0;
+        Long newsId = 393L;
+        List<NewsVO> newsVOList = userService.getNewsVO(page);
+        NewsVO newsVO = userService.getNewsVO(newsId);
+        for (NewsVO n:newsVOList
+             ) {
+            System.out.println(n.getText());
+        }
+        System.out.println(newsVO.getContent());
     }
 }

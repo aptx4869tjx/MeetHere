@@ -1,10 +1,13 @@
 package com.tjx.MeetHere.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.tjx.MeetHere.MeetHereApplication;
+import com.tjx.MeetHere.controller.viewObject.NewsVO;
 import com.tjx.MeetHere.dao.UserDao;
 import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.response.CommonReturnType;
 import com.tjx.MeetHere.service.Impl.UserServiceImpl;
+import com.tjx.MeetHere.service.PictureService;
 import com.tjx.MeetHere.service.UserService;
 import com.tjx.MeetHere.service.model.UserModel;
 import org.apache.shiro.SecurityUtils;
@@ -12,9 +15,12 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -24,6 +30,8 @@ public class UserController extends BaseController {
     UserService userService;
     @Autowired
     HttpServletRequest httpServletRequest;
+    @Autowired
+    PictureService pictureService;
 
     @RequestMapping("/notLogin")
     public CommonReturnType notLogin() {
@@ -53,14 +61,6 @@ public class UserController extends BaseController {
         String password = (String) params.get("password");
 
         UserModel userModel = userService.validateLogin(email, password);
-        //password = MeetHereApplication.getMD5(password);
-//        UsernamePasswordToken token = new UsernamePasswordToken(email, password+"/"+MeetHereApplication.salt);
-//        Subject subject = SecurityUtils.getSubject();
-//        try {
-//            subject.login(token);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         this.httpServletRequest.getSession().setAttribute("isLogin", true);
         this.httpServletRequest.getSession().setAttribute("loginUser", userModel);
         return new CommonReturnType(userModel);
@@ -73,6 +73,40 @@ public class UserController extends BaseController {
             subject.logout();
         }
         return new CommonReturnType(null);
+    }
+
+
+    //上传新闻图片
+    @PostMapping("/newsImage")
+    public CommonReturnType uploadNewsImage(@RequestParam("file") MultipartFile image) {
+        String newName = pictureService.RandomUUID();
+        String imgUrl = userService.uploadNewsImage(image, newName + ".png");
+        return new CommonReturnType(imgUrl);
+    }
+
+
+    //发布新闻
+    @PostMapping("/news")
+    public CommonReturnType publishNews(@RequestBody Map<String, Object> params) {
+        String title = (String) params.get("title");
+        String content = (String) params.get("content");
+        String text = (String) params.get("text");
+        List<String> imageUrls = (List<String>) params.get("images");
+        UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("loginUser");
+        userService.publishNews(userModel.getUserId(), title, content, text, imageUrls);
+        return new CommonReturnType(null);
+    }
+
+    @GetMapping("/news_vo")
+    public CommonReturnType getNews(@RequestParam("page") Integer page) {
+        List<NewsVO> newsVOList = userService.getNewsVO(page);
+        return new CommonReturnType(newsVOList);
+    }
+
+    @GetMapping("/news/{newsId}")
+    public CommonReturnType getNewsByNewsId(@PathVariable("newsId") Long newsId) {
+        NewsVO newsVO = userService.getNewsVO(newsId);
+        return new CommonReturnType(newsVO);
     }
 
 
