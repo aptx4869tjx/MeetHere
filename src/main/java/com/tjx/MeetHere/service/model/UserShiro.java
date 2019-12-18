@@ -1,6 +1,6 @@
 package com.tjx.MeetHere.service.model;
 
-import java.util.Set;
+
 
 public class UserShiro {
     private String email;

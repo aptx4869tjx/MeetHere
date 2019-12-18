@@ -21,11 +21,11 @@ import java.util.List;
 @Service
 public class CommentServiceImpl implements CommentService {
     @Autowired
-    CommentDao commentDao;
+    private CommentDao commentDao;
     @Autowired
-    VenueDao venueDao;
+    private VenueDao venueDao;
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
 
     @Override
     public CommentVO saveComment(Long userId, Long venueId, String content) {

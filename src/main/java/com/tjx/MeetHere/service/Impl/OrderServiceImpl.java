@@ -1,6 +1,5 @@
 package com.tjx.MeetHere.service.Impl;
 
-import com.google.common.primitives.Bytes;
 import com.tjx.MeetHere.controller.viewObject.OrderVO;
 import com.tjx.MeetHere.dao.*;
 import com.tjx.MeetHere.dataObject.OccupiedTimeSlot;
@@ -26,25 +25,24 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
 public class OrderServiceImpl implements OrderService {
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    ValidatorImpl validator;
+    private ValidatorImpl validator;
     @Autowired
-    VenueDao venueDao;
+    private VenueDao venueDao;
     @Autowired
-    TimeSlotDao timeSlotDao;
+    private TimeSlotDao timeSlotDao;
     @Autowired
-    OccupiedTimeSlotDao occupiedTimeSlotDao;
+    private OccupiedTimeSlotDao occupiedTimeSlotDao;
     @Autowired
-    OrderInfoDao orderInfoDao;
+    private OrderInfoDao orderInfoDao;
     @Autowired
-    HttpServletRequest httpServletRequest;
+    private HttpServletRequest httpServletRequest;
 
     @Override
     @Transactional

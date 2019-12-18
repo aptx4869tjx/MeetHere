@@ -27,13 +27,13 @@ import java.util.List;
 @Service
 public class VenueServiceImpl implements VenueService {
     @Autowired
-    ValidatorImpl validator;
+    private ValidatorImpl validator;
     @Autowired
-    VenueDao venueDao;
+    private VenueDao venueDao;
     @Autowired
-    TimeSlotDao timeSlotDao;
+    private TimeSlotDao timeSlotDao;
     @Autowired
-    OccupiedTimeSlotDao occupiedTimeSlotDao;
+    private OccupiedTimeSlotDao occupiedTimeSlotDao;
 
 
     @Override

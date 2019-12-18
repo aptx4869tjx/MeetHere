@@ -36,17 +36,17 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
     @Autowired
-    UserLoginDao userLoginDao;
+    private UserLoginDao userLoginDao;
     @Autowired
-    ValidatorImpl validator;
+    private ValidatorImpl validator;
     @Autowired
-    PictureService pictureService;
+    private PictureService pictureService;
     @Autowired
-    NewsImageDao newsImageDao;
+    private NewsImageDao newsImageDao;
     @Autowired
-    NewsDao newsDao;
+    private NewsDao newsDao;
 
     @Override
     public UserModel getUserByUserId(Long userId) {
@@ -220,10 +220,12 @@ public class UserServiceImpl implements UserService {
             BeanUtils.copyProperties(news, newsVO);
             List<String> res = newsImageDao.getImageUrlsByNewsId(news.getNewsId());
             List<String> imgUrls;
-            if (res.size() > 3)//只取前三张图片
+            //只取前三张图片
+            if (res.size() > 3) {
                 imgUrls = res.subList(0, 3);
-            else
+            } else {
                 imgUrls = res;
+            }
             newsVO.setImgUrls(imgUrls);
         } else {
             BeanUtils.copyProperties(news, newsVO);

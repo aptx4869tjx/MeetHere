@@ -1,6 +1,6 @@
 package com.tjx.MeetHere.dao;
 
-import com.tjx.MeetHere.controller.viewObject.NewsVO;
+
 import com.tjx.MeetHere.dataObject.NewsImage;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

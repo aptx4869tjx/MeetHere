@@ -1,7 +1,6 @@
 package com.tjx.MeetHere.controller;
 
 import com.tjx.MeetHere.controller.viewObject.VenueVO;
-import com.tjx.MeetHere.dataObject.User;
 import com.tjx.MeetHere.dataObject.Venue;
 import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.error.ErrorEm;
@@ -23,7 +22,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 
 @RestController
@@ -33,11 +31,11 @@ public class VenueController extends BaseController {
     @Autowired
     private VenueService venueService;
     @Autowired
-    OrderService orderService;
+    private OrderService orderService;
     @Autowired
-    PictureService pictureService;
+    private PictureService pictureService;
     @Autowired
-    HttpServletRequest httpServletRequest;
+    private HttpServletRequest httpServletRequest;
 
     //获取所有场馆的基本信息
     @RequestMapping(method = RequestMethod.GET, value = "/venues")
@@ -113,10 +111,11 @@ public class VenueController extends BaseController {
             imgUrl = pictureService.uploadPicture(image, newName + ".png");
         }
         boolean result = venueService.updateVenueInfo(venueId, venue, imgUrl);
-        if (result)
+        if (result) {
             return new CommonReturnType(null);
-        else
+        } else {
             throw new BusinessException(ErrorEm.VENUE_UPDATE_FAIL);
+        }
     }
 
     private Byte[] parse(String s) {

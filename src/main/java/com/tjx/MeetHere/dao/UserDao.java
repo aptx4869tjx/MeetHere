@@ -10,23 +10,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface UserDao extends JpaRepository<User, Long> {
-    public User findByUserId(Long userId);
+    User findByUserId(Long userId);
 
-    public boolean existsByEmail(String email);
+    boolean existsByEmail(String email);
 
-    public User findByEmail(String email);
+    User findByEmail(String email);
 
     @Query(value = "select U.userId from User as U where U.email=:email")
-    public Long selectUserIdByEmail(@Param("email") String email);
+    Long selectUserIdByEmail(@Param("email") String email);
 
     @Query(value = "select U.isAdmin from User as U where U.userId=:userId")
-    public byte selectRoleByUserId(@Param("userId") Long userId);
+    byte selectRoleByUserId(@Param("userId") Long userId);
 
     @Query(value = "select U.email from User as U where U.userId=:userId")
-    public String getEmailByUserId(@Param("userId")Long userId);
+    String getEmailByUserId(@Param("userId") Long userId);
 
     @Query(value = "select U.userName from User as U where U.userId=:userId")
-    public String getUsernameByUserId(@Param("userId")Long userId);
+    String getUsernameByUserId(@Param("userId") Long userId);
 
     @Modifying
     @Transactional

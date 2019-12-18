@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,9 +18,9 @@ import java.util.Map;
 public class CommentController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
-    CommentService commentService;
+    private CommentService commentService;
     @Autowired
-    HttpServletRequest httpServletRequest;
+    private HttpServletRequest httpServletRequest;
 
     //获取某个场地的评论的内容.如果没有venueId
     @GetMapping("/comments/{venueId}")

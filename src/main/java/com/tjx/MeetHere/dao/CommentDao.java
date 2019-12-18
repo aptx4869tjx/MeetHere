@@ -1,7 +1,6 @@
 package com.tjx.MeetHere.dao;
 
 import com.tjx.MeetHere.dataObject.Comment;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;

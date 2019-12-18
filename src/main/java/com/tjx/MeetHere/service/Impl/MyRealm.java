@@ -1,24 +1,21 @@
 package com.tjx.MeetHere.service.Impl;
 
-import com.tjx.MeetHere.MeetHereApplication;
-import com.tjx.MeetHere.error.BusinessException;
-import com.tjx.MeetHere.error.ErrorEm;
+
 import com.tjx.MeetHere.service.UserService;
 import com.tjx.MeetHere.service.model.UserShiro;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.crypto.hash.Sha256Hash;
-import org.apache.shiro.realm.AuthenticatingRealm;
+
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+
 
 public class MyRealm extends AuthorizingRealm {
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     {
         //设置用于匹配密码的CredentialsMatcher

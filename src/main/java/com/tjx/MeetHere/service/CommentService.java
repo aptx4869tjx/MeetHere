@@ -1,7 +1,6 @@
 package com.tjx.MeetHere.service;
 
 import com.tjx.MeetHere.controller.viewObject.CommentVO;
-import com.tjx.MeetHere.dataObject.Comment;
 
 import java.util.List;
 

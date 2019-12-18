@@ -1,6 +1,5 @@
 package com.tjx.MeetHere.dataObject;
 
-import org.hibernate.annotations.GeneratorType;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

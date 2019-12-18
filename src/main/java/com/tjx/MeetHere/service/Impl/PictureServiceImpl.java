@@ -24,7 +24,7 @@ public class PictureServiceImpl implements PictureService {
     private String FTP_BASE_PATH = "/html/images";
     private String IMAGE_BASE_URL = "http://47.102.142.229:/";
 
-    String filePath = "/www/server/nginx/html/images/";
+    private String filePath = "/www/server/nginx/html/images/";
 
     //ftp上传到服务器
     @Override

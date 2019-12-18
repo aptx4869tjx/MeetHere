@@ -1,17 +1,17 @@
 package com.tjx.MeetHere.controller;
 
-import com.alibaba.fastjson.JSON;
+
 import com.tjx.MeetHere.MeetHereApplication;
 import com.tjx.MeetHere.controller.viewObject.NewsVO;
-import com.tjx.MeetHere.dao.UserDao;
+
 import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.response.CommonReturnType;
-import com.tjx.MeetHere.service.Impl.UserServiceImpl;
+
 import com.tjx.MeetHere.service.PictureService;
 import com.tjx.MeetHere.service.UserService;
 import com.tjx.MeetHere.service.model.UserModel;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
+
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,18 +20,18 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/user")
 @CrossOrigin(allowCredentials = "true", allowedHeaders = "*")
 public class UserController extends BaseController {
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    HttpServletRequest httpServletRequest;
+    private HttpServletRequest httpServletRequest;
     @Autowired
-    PictureService pictureService;
+    private PictureService pictureService;
 
     @RequestMapping("/notLogin")
     public CommonReturnType notLogin() {
