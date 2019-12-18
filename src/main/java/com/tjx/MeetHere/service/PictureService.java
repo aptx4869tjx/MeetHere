@@ -11,6 +11,6 @@ import java.util.UUID;
 
 public interface PictureService {
     String uploadPicture(MultipartFile uploadFile,String newName) throws BusinessException;
-    void uploadFile(MultipartFile uploadFile, String fileName) throws BusinessException;
+    String uploadFile(MultipartFile uploadFile, String fileName) throws BusinessException;
     String RandomUUID();
 }

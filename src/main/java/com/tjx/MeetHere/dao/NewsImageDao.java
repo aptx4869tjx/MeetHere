@@ -13,6 +13,10 @@ import java.util.List;
 public interface NewsImageDao extends JpaRepository<NewsImage, Long> {
     NewsImage findByImageUrl(String imgUrl);
 
+    @Modifying
+    @Transactional
+    void deleteByImageUrl(String imgUrl);
+
 
     @Modifying
     @Transactional

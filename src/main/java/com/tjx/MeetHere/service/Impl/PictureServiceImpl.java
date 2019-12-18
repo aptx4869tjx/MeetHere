@@ -48,11 +48,11 @@ public class PictureServiceImpl implements PictureService {
 
     //项目部署到服务器后，直接保存到指定目录。
     @Override
-    public void uploadFile(MultipartFile uploadFile, String fileName) throws BusinessException {
-        //TODO
+    public String uploadFile(MultipartFile uploadFile, String fileName) throws BusinessException {
         try {
             byte[] file = uploadFile.getBytes();
             FileUtils.writeByteArrayToFile(new File(filePath + fileName), file, false);//这里的false代表写入的文件是从头开始重新写入，或者理解为清空文件内容后重新写；若为true,则是接着原本文件内容的结尾开始写
+            return IMAGE_BASE_URL + fileName;
         } catch (IOException e) {
             throw new BusinessException(ErrorEm.PICTURE_UPLOAD_FAIL);
         }
@@ -63,8 +63,8 @@ public class PictureServiceImpl implements PictureService {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
-    public boolean uploadFile(String ip, Integer port, String account, String passwd,
-                              InputStream inputStream, String workingDir, String fileName) throws Exception {
+    private boolean uploadFile(String ip, Integer port, String account, String passwd,
+                               InputStream inputStream, String workingDir, String fileName) throws Exception {
         boolean result = false;
         // 1. 创建一个FtpClient对象
         FTPClient ftpClient = new FTPClient();
@@ -97,7 +97,6 @@ public class PictureServiceImpl implements PictureService {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // FIXME 听说，项目里面最好少用try catch 捕获异常，这样会导致Spring的事务回滚出问题？？？难道之前写的代码都是假代码！！！
             if (ftpClient.isConnected()) {
                 try {
                     ftpClient.disconnect();

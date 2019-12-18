@@ -1,6 +1,7 @@
 package com.tjx.MeetHere.service;
 
 import com.tjx.MeetHere.controller.viewObject.NewsVO;
+import com.tjx.MeetHere.dataObject.News;
 import com.tjx.MeetHere.error.BusinessException;
 import com.tjx.MeetHere.service.model.UserModel;
 import com.tjx.MeetHere.service.model.UserShiro;
@@ -17,7 +18,7 @@ public interface UserService {
 
     UserModel validateLogin(String email, String password) throws BusinessException;
 
-    void publishNews(Long userId, String title, String content, String text, List<String> imgUrls) throws BusinessException;
+    News publishNews(Long userId, String title, String content, String text, List<String> imgUrls) throws BusinessException;
 
     String uploadNewsImage(MultipartFile uploadFile, String newName);
 

@@ -12,6 +12,7 @@ public interface CommentService {
 
     List<CommentVO> getCheckedCommentVOByVenueId(Long venueId);
 
+    //暂时不用
     List<CommentVO> getAllCommentVOByVenueId(Long venueId);
 
     List<CommentVO> getAllCommentVO(Integer page);

@@ -92,10 +92,10 @@ public class VenueController extends BaseController {
         UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("loginUser");
         Byte[] tss = parse(timeSlots);
         String newName = pictureService.RandomUUID();
-        String imgUrl = pictureService.uploadPicture(file, newName + ".png");
+//        String imgUrl = pictureService.uploadPicture(file, newName + ".png");
         //TODO
         //项目运行在本地时调用ftp上传，在服务器上时调用下面的注释方法
-//        pictureService.uploadFile(file, newName + ".png");
+        String imgUrl = pictureService.uploadFile(file, newName + ".png");
 
 //        String imgUrl = "http://47.102.142.229:/" + newName + ".png";
         venueService.createVenue(userModel.getUserId(), venueName, description, site, price, tss, imgUrl);

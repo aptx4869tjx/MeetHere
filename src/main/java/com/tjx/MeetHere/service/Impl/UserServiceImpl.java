@@ -90,8 +90,6 @@ public class UserServiceImpl implements UserService {
         userModel.setUserId(user.getUserId());
         UserLogin userLogin = getUserLoginFromUserModel(userModel);
         userLoginDao.save(userLogin);
-
-
     }
 
     @Override
@@ -118,7 +116,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void publishNews(Long userId, String title, String content, String text, List<String> imgUrls) throws BusinessException {
+    public News publishNews(Long userId, String title, String content, String text, List<String> imgUrls) throws BusinessException {
         if (userId == null) {
             throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR);
         }
@@ -141,11 +139,17 @@ public class UserServiceImpl implements UserService {
                 newsImageDao.updateNewsImageByImgUrl(news.getNewsId(), imgUrl);
             }
         }
+        return news;
     }
 
     @Override
     public String uploadNewsImage(MultipartFile uploadFile, String newName) {
+        //TODO
+        //运行在本机上的方法
         String imgUrl = pictureService.uploadPicture(uploadFile, newName);
+        //运行在服务器上的方法
+        //String imgUrl = pictureService.uploadFile(uploadFile, newName);
+
         NewsImage newsImage = new NewsImage();
         newsImage.setImageUrl(imgUrl);
         newsImage.setNewsId(0L);

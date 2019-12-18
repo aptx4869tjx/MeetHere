@@ -80,6 +80,7 @@ public class UserController extends BaseController {
     @PostMapping("/newsImage")
     public CommonReturnType uploadNewsImage(@RequestParam("file") MultipartFile image) {
         String newName = pictureService.RandomUUID();
+
         String imgUrl = userService.uploadNewsImage(image, newName + ".png");
         return new CommonReturnType(imgUrl);
     }
