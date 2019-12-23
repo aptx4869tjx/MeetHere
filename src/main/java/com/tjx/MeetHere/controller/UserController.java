@@ -110,5 +110,11 @@ public class UserController extends BaseController {
         return new CommonReturnType(newsVO);
     }
 
+    @DeleteMapping("/news/{newsId}")
+    public CommonReturnType deleteNewsByNewsId(@PathVariable("newsId") Long newsId) {
+        userService.deleteNewsByNewsId(newsId);
+        return new CommonReturnType(null);
+    }
+
 
 }

@@ -123,8 +123,8 @@ public class UserServiceImpl implements UserService {
         if (title == null || title.equals("")) {
             throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, "标题不能为空");
         }
-        if (content == null || content.equals("")) {
-            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, "内容不能为空");
+        if (text == null || text.equals("")) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, "文字内容不能为空");
         }
         News news = new News();
         news.setUserId(userId);
@@ -146,9 +146,9 @@ public class UserServiceImpl implements UserService {
     public String uploadNewsImage(MultipartFile uploadFile, String newName) {
         //TODO
         //运行在本机上的方法
-        String imgUrl = pictureService.uploadPicture(uploadFile, newName);
+//        String imgUrl = pictureService.uploadPicture(uploadFile, newName);
         //运行在服务器上的方法
-        //String imgUrl = pictureService.uploadFile(uploadFile, newName);
+        String imgUrl = pictureService.uploadFile(uploadFile, newName);
 
         NewsImage newsImage = new NewsImage();
         newsImage.setImageUrl(imgUrl);
@@ -179,6 +179,15 @@ public class UserServiceImpl implements UserService {
         News news = newsDao.findByNewsId(newsId);
         NewsVO newsVO = getNewsVOFromNews(news, false);
         return newsVO;
+    }
+
+    @Override
+    public void deleteNewsByNewsId(Long newsId) {
+        if (newsId == null) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR);
+        }
+        newsDao.deleteByNewsId(newsId);
+        newsImageDao.deleteByNewsId(newsId);
     }
 
     private UserModel convertFromUserAndUserLogin(User user, UserLogin userLogin) {

@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -66,8 +67,12 @@ public class OrderServiceImpl implements OrderService {
         //判断预约时间是否冲突
         for (Byte occupiedTimeSlot : occupiedTimeSlots
         ) {
-            if (!validateTimeSlot(occupiedTimeSlot, venueId, date)) {
-                throw new BusinessException(ErrorEm.VENUE_TIME_IS_OCCUPIED);
+            if (timeSlotDao.existsByVenueIdAndTimeSlot(venueId, occupiedTimeSlot)) {
+                if (!validateTimeSlot(occupiedTimeSlot, venueId, date)) {
+                    throw new BusinessException(ErrorEm.VENUE_TIME_IS_OCCUPIED);
+                }
+            } else {
+                throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR);
             }
         }
         orderModel.setIsChecked((byte) 0);
@@ -85,9 +90,14 @@ public class OrderServiceImpl implements OrderService {
 
     //需要在controller层校验用户登录信息
     @Override
-    public List<OrderVO> getOrderByUserId(Long userId) {
-        List<OrderInfo> orderInfos = orderInfoDao.findByUserId(userId);
-        if (orderInfos == null) {
+    public List<OrderVO> getOrderByUserId(Long userId, Integer page) {
+        if (page < 0) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR);
+        }
+        Sort sort = new Sort(Sort.Direction.DESC, "orderId");
+        PageRequest pageRequest = new PageRequest(page, 5, sort);
+        List<OrderInfo> orderInfos = orderInfoDao.findByUserId(userId, pageRequest);
+        if (orderInfos.size() == 0) {
             return null;
         }
         List<OrderVO> orderVOS = new ArrayList<>();
@@ -142,6 +152,26 @@ public class OrderServiceImpl implements OrderService {
             mapList.add(venueStatistic);
         }
         return mapList;
+    }
+
+    @Override
+    public void deleteOrderByOrderId(Long orderId) {
+        List<OccupiedTimeSlot> occupiedTimeSlots = occupiedTimeSlotDao.findByOrderId(orderId);
+        for (OccupiedTimeSlot ots : occupiedTimeSlots
+        ) {
+            LocalDate date = ots.getDate();
+            //取消订单的日期在今天之前，不能取消
+            if (date.isBefore(LocalDate.now())) {
+                throw new BusinessException(ErrorEm.ORDER_CANCEL_FAIL);
+            }
+            Byte h = ots.getOccupiedTimeSlot();
+            //订单中的预约开始时间已经过期的话，不能取消订单
+            if (LocalDateTime.of(date, LocalTime.MIN).plusHours(h - 1).isBefore(LocalDateTime.now())) {
+                throw new BusinessException(ErrorEm.ORDER_CANCEL_FAIL);
+            }
+        }
+        orderInfoDao.deleteByOrderId(orderId);
+        occupiedTimeSlotDao.deleteByOrderId(orderId);
     }
 
 

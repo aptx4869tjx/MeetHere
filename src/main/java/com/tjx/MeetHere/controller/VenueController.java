@@ -108,7 +108,9 @@ public class VenueController extends BaseController {
         String imgUrl = null;
         if (image != null) {
             String newName = pictureService.RandomUUID();
-            imgUrl = pictureService.uploadPicture(image, newName + ".png");
+            //TODO
+//            imgUrl = pictureService.uploadPicture(image, newName + ".png");
+            imgUrl = pictureService.uploadFile(image, newName + ".png");
         }
         boolean result = venueService.updateVenueInfo(venueId, venue, imgUrl);
         if (result) {
@@ -117,6 +119,7 @@ public class VenueController extends BaseController {
             throw new BusinessException(ErrorEm.VENUE_UPDATE_FAIL);
         }
     }
+
 
     private Byte[] parse(String s) {
         String s1;

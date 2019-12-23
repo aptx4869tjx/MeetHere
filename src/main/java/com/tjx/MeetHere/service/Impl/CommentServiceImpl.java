@@ -73,11 +73,6 @@ public class CommentServiceImpl implements CommentService {
         return commentVOList;
     }
 
-    @Override
-    public List<CommentVO> getAllCommentVOByVenueId(Long venueId) {
-        //TODO
-        return null;
-    }
 
     @Override
     public List<CommentVO> getAllCommentVO(Integer page) {

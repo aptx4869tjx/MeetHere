@@ -17,6 +17,10 @@ public interface NewsImageDao extends JpaRepository<NewsImage, Long> {
     @Transactional
     void deleteByImageUrl(String imgUrl);
 
+    @Modifying
+    @Transactional
+    void deleteByNewsId(Long newsId);
+
 
     @Modifying
     @Transactional

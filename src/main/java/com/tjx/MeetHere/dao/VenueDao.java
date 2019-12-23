@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 public interface VenueDao extends JpaRepository<Venue, Long> {
@@ -14,6 +15,11 @@ public interface VenueDao extends JpaRepository<Venue, Long> {
     boolean existsByVenueId(Long venueId);
 
     List<Venue> findAll();
+
+    @Modifying
+    @Transactional
+    void deleteByVenueId(Long venueId);
+
 
     @Query(value = "select V.venueId from Venue as V")
     List<Long> getAllVenueId();

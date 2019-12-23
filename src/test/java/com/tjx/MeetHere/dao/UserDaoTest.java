@@ -23,7 +23,7 @@ class UserDaoTest {
 
     @Test
     void findByUserId() {
-        User user = userDao.findByUserId(1L);
+        User user = userDao.findByUserId(3L);
         Assertions.assertEquals("tjx",user.getUserName());
     }
 }

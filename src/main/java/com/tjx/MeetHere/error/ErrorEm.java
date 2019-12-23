@@ -11,6 +11,7 @@ public enum ErrorEm implements CommonError{
     VENUE_TIME_IS_OCCUPIED(50002,"预约时间冲突或者已经过期，请更换其他时段"),
     VENUE_UPDATE_FAIL(50003,"场地信息更新失败"),
     PICTURE_UPLOAD_FAIL(60001,"图片上传失败"),
+    ORDER_CANCEL_FAIL(70001,"订单取消失败，预约的日期已经过期")
     ;
 
     private int errorCode;

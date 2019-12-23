@@ -30,10 +30,11 @@ public class OrderController extends BaseController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
+    //获取单个用户的订单
     @GetMapping("/order")
-    public CommonReturnType getUserOrder() {
+    public CommonReturnType getUserOrder(@RequestParam("page") Integer page) {
         UserModel userModel = (UserModel) httpServletRequest.getSession().getAttribute("loginUser");
-        List<OrderVO> orderVOList = orderService.getOrderByUserId(userModel.getUserId());
+        List<OrderVO> orderVOList = orderService.getOrderByUserId(userModel.getUserId(), page);
         return new CommonReturnType(orderVOList);
     }
 
@@ -50,8 +51,8 @@ public class OrderController extends BaseController {
         if (params.size() == 0) {
             return new CommonReturnType(orderService.defaultGetStatistics());
         }
-        if(params.get("venueIdList")==null){
-            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"查询场馆不能为空");
+        if (params.get("venueIdList") == null) {
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR, "查询场馆不能为空");
         }
         String venueIdList = params.get("venueIdList").toString();
         String day1 = (String) params.get("startDate");
@@ -64,4 +65,12 @@ public class OrderController extends BaseController {
 
         return new CommonReturnType(result);
     }
+
+    //删除用户的某一个订单
+    @DeleteMapping("/order/{orderId}")
+    public CommonReturnType deleteOrderByOrderId(@PathVariable("orderId") Long orderId) {
+        orderService.deleteOrderByOrderId(orderId);
+        return new CommonReturnType(null);
+    }
+
 }

@@ -25,4 +25,6 @@ public interface UserService {
     List<NewsVO> getNewsVO(Integer page);
 
     NewsVO getNewsVO(Long newsId);
+
+    void deleteNewsByNewsId(Long newsId);
 }
