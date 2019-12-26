@@ -22,26 +22,45 @@ class CommentServiceTest {
     @Autowired
     CommentDao commentDao;
 
+    /**
+     * 测试保存评论
+     * @author 田家旭
+     * @date 2019/12/24 9:06 下午
+     * @param
+     * @return void
+     **/
     @Test
     void testSaveComment() {
         Long venueId = 35L;
         Long userId = 3L;
         String content = "test_content";
         CommentVO commentVO = commentService.saveComment(userId, venueId, content);
+        //此事还没有审核
         assertEquals(0, commentVO.getIsChecked().intValue());
         commentDao.deleteByCommentId(commentVO.getCommentId());
 
+        //参数错误，userId在controller层从session获取并校验，所以此处userId设置为正常值
         assertThrows(BusinessException.class,()->commentService.saveComment(userId,null,content));
         assertThrows(BusinessException.class,()->commentService.saveComment(userId,venueId,null));
+        //不存在的场地
         assertThrows(BusinessException.class,()->commentService.saveComment(userId,0L,content));
     }
 
+    /**
+     * 测试审核评论
+     * @author 田家旭
+     * @date 2019/12/24 9:08 下午
+     * @param
+     * @return void
+     **/
     @Test
     void testCheckComment() {
         Long venueId = 35L;
         Long userId = 3L;
         String content = "test_content";
+        //先发表一个评论
         CommentVO commentVO = commentService.saveComment(userId, venueId, content);
+        //审核
         commentService.checkComment(commentVO.getCommentId(),(byte)1);
         assertEquals(1,commentDao.findByCommentId(commentVO.getCommentId()).getIsChecked().intValue());
         commentDao.deleteByCommentId(commentVO.getCommentId());
@@ -54,9 +73,6 @@ class CommentServiceTest {
         assertNotNull(commentVOS);
     }
 
-    @Test
-    void testGetAllCommentVOByVenueId() {
-    }
 
     @Test
     void testGetAllCommentVO() {

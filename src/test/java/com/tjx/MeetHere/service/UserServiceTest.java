@@ -227,4 +227,15 @@ class UserServiceTest {
         assertNotNull(newsVOList);
         //System.out.println(newsVOList.toString());
     }
+
+    @Test
+    void testDeleteNewsByNewsId() {
+        assertThrows(BusinessException.class,()->{
+            userService.deleteNewsByNewsId(null);
+        });
+        News news = userService.publishNews(3L, "title1", "<p>测试</p>", "测试", null);
+        assertDoesNotThrow(()->{
+            userService.deleteNewsByNewsId(news.getNewsId());
+        });
+    }
 }

@@ -43,69 +43,6 @@ class OrderServiceTest {
     @Autowired
     OccupiedTimeSlotDao occupiedTimeSlotDao;
 
-//    @Test
-//    void testFtpClient() throws IOException {
-//        // 1. 创建一个FtpClient对象
-//        FTPClient ftpClient = new FTPClient();
-//        // 2. 创建 ftp 连接
-//        ftpClient.connect("47.102.142.229", 21);
-//        // 3. 登录 ftp 服务器
-//        ftpClient.login("root", "200812");
-//        // 4. 读取本地文件
-//        FileInputStream inputStream = new FileInputStream(new File("/Users/tjx/Desktop/1.png"));
-//        // 5. 设置上传的路径
-//        System.out.println(ftpClient.changeWorkingDirectory("/html/images"));
-//        System.out.println(ftpClient.printWorkingDirectory());
-////        ftpClient.enterLocalPassiveMode();
-//        // 6. 修改上传文件的格式为二进制
-//        ftpClient.enterLocalPassiveMode();
-//        ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
-//        // 7. 服务器存储文件，第一个参数是存储在服务器的文件名，第二个参数是文件流
-//        try {
-//            ftpClient.storeFile("3.png", inputStream);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        System.out.println(ftpClient.printWorkingDirectory());
-//        // 8. 关闭连接
-//        ftpClient.logout();
-//    }
-
-    @Test
-    void getOrderByUserId() {
-        Long userId = 164L;
-        List<OrderVO> orderVOS = orderService.getOrderByUserId(userId,0);
-        System.out.println(orderVOS.size());
-    }
-
-
-    @Test
-    void getStatistics() {
-        List<Long> venueIds = new ArrayList<>();
-        venueIds.add(35L);
-        venueIds.add(48L);
-        List<Map<Object, Object>> result = orderService.getStatistics(venueIds, LocalDate.now().minusDays(3),
-                LocalDate.now().plusDays(1));
-        System.out.println(JSON.toJSONString(result));
-        for (Map m : result) {
-            System.out.println(m.keySet());
-            System.out.println(m.values());
-
-        }
-    }
-
-    @Test
-    void defaultGetStatistics() {
-        List<Map<Object, Object>> result = orderService.defaultGetStatistics();
-        System.out.println(JSON.toJSONString(result));
-        for (Map m : result) {
-            System.out.println(m.keySet());
-            System.out.println(m.values());
-
-        }
-    }
-
     @Test
     void testPlaceOrder() {
         Long userId = 3L;
@@ -142,13 +79,13 @@ class OrderServiceTest {
     @ParameterizedTest
     @ValueSource(longs = {3, 164, 166})
     void testGetOrderByUserId(long userId) {
-        List<OrderVO> orderVOList = orderService.getOrderByUserId(userId,0);
+        List<OrderVO> orderVOList = orderService.getOrderByUserId(userId, 0);
         assertNotNull(orderVOList);
     }
 
     @Test
     void testGetOrderByUserId_1() {
-        List<OrderVO> orderVOList = orderService.getOrderByUserId(0L,0);
+        List<OrderVO> orderVOList = orderService.getOrderByUserId(0L, 0);
         assertNull(orderVOList);
     }
 
@@ -183,4 +120,18 @@ class OrderServiceTest {
     }
 
 
+    @Test
+    void testDeleteOrderByOrderId() {
+        //取消一个过期的订单
+        assertThrows(BusinessException.class, () -> orderService.deleteOrderByOrderId(283L));
+        //新下一个订单
+        Long userId = 3L;
+        Long venueId = 35L;
+        Byte[] occupiedTimeSlots = new Byte[]{9, 10, 11};
+        LocalDate date = LocalDate.now().plusDays(1);
+        OrderModel orderModel = orderService.placeOrder(userId, venueId, occupiedTimeSlots, date);
+        assertDoesNotThrow(() -> {
+            orderService.deleteOrderByOrderId(orderModel.getOrderId());
+        });
+    }
 }

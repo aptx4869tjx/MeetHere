@@ -146,9 +146,9 @@ public class UserServiceImpl implements UserService {
     public String uploadNewsImage(MultipartFile uploadFile, String newName) {
         //TODO
         //运行在本机上的方法
-//        String imgUrl = pictureService.uploadPicture(uploadFile, newName);
+        String imgUrl = pictureService.uploadPicture(uploadFile, newName);
         //运行在服务器上的方法
-        String imgUrl = pictureService.uploadFile(uploadFile, newName);
+//        String imgUrl = pictureService.uploadFile(uploadFile, newName);
 
         NewsImage newsImage = new NewsImage();
         newsImage.setImageUrl(imgUrl);
