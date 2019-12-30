@@ -13,6 +13,8 @@ public interface OrderInfoDao extends JpaRepository<OrderInfo,Long> {
     OrderInfo findByOrderId(Long orderId);
     List<OrderInfo> findByUserId(Long userId, Pageable pageable);
 
+    List<OrderInfo> findByVenueId(Long venueId);
+
     @Modifying
     @Transactional
     void deleteByOrderId(Long orderId);

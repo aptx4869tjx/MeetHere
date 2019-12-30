@@ -3,6 +3,8 @@ package com.tjx.MeetHere.controller;
 import com.alibaba.fastjson.JSON;
 import com.tjx.MeetHere.MeetHereApplication;
 import com.tjx.MeetHere.controller.viewObject.OrderVO;
+import com.tjx.MeetHere.dao.OrderInfoDao;
+import com.tjx.MeetHere.dataObject.OrderInfo;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.SecurityManager;
@@ -21,6 +23,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -43,6 +46,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class OrderControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
+    @Autowired
+    private OrderInfoDao orderInfoDao;
     @Resource
     SecurityManager securityManager;
 
@@ -59,7 +64,7 @@ class OrderControllerTest {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password, true);
         subject.login(token);
         ThreadContext.bind(subject);
-//        session = new MockHttpSession();
+        session = new MockHttpSession();
     }
 
     @BeforeEach
@@ -101,11 +106,20 @@ class OrderControllerTest {
      * 全覆盖
      */
     void getAllOrders() throws Exception{
-//        Map<String,Object> param = new HashMap<>();
-//        param.put("page", 2);
+        Map<String,Object> params= new HashMap<>();
+        params.put("email","1428651289@qq.com");
+        params.put("password","123");
+        mockMvc.perform(post("/user/login")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .session(session)
+                .content(JSON.toJSONString(params)))
+                .andExpect(status().isOk())
+                .andDo(print());
+
         mockMvc.perform(get("/user/orders")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .param("page", JSON.toJSONString(1)))
+                .param("page", String.valueOf(0))
+                .session(session))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -113,7 +127,7 @@ class OrderControllerTest {
     @Test
     /**
      * 全覆盖
-     * 第一个return和throw未覆盖
+     *
      */
     void getStatistics() throws Exception{
         //没有指定场馆时
@@ -154,10 +168,23 @@ class OrderControllerTest {
     }
 
 
-    //TODO
     @Test
-    void testDeleteOrderByOrderId(){
+    void testDeleteOrderByOrderId() throws Exception {
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setUserId(-1L);
+//        orderInfo.setOrderId(-1L);
+        orderInfo.setPrice(-1.0);
+        orderInfo.setIsChecked((byte)0);
+        orderInfo.setOrderTime(LocalDateTime.now());
+        orderInfo.setVenueId(-1L);
 
+        orderInfoDao.save(orderInfo);
+
+        String orderId = orderInfo.getOrderId().toString();
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/user/order/"+orderId))
+                .andExpect(status().isOk())
+                .andDo(print());
     }
 
 }

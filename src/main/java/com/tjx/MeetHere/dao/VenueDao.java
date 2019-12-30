@@ -16,6 +16,8 @@ public interface VenueDao extends JpaRepository<Venue, Long> {
 
     List<Venue> findAll();
 
+    List<Venue> findByVenueName(String venueName);
+
     @Modifying
     @Transactional
     void deleteByVenueId(Long venueId);

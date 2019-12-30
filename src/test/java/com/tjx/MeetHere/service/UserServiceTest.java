@@ -207,7 +207,7 @@ class UserServiceTest {
     }
 
     @ParameterizedTest
-    @ValueSource(longs = {398, 403, 405})
+    @ValueSource(longs = {1215, 1222, 1227})
     void getNewsVOTest(long newsId) {
         NewsVO newsVO = userService.getNewsVO(newsId);
         assertNotNull(newsVO.getContent());

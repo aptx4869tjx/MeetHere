@@ -1,8 +1,13 @@
 package com.tjx.MeetHere.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.tjx.MeetHere.MeetHereApplication;
+import com.tjx.MeetHere.dao.NewsDao;
+import com.tjx.MeetHere.dao.NewsImageDao;
 import com.tjx.MeetHere.dao.UserDao;
+import com.tjx.MeetHere.dataObject.News;
+import com.tjx.MeetHere.dataObject.NewsImage;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.mgt.SecurityManager;
@@ -11,6 +16,7 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.subject.WebSubject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,16 +25,23 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import org.apache.shiro.subject.Subject;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,6 +58,10 @@ class UserControllerTest {
     private WebApplicationContext webApplicationContext;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private NewsDao newsDao;
+    @Autowired
+    private NewsImageDao newsImageDao;
     @Resource
     SecurityManager securityManager;
 
@@ -52,6 +69,8 @@ class UserControllerTest {
     private Subject subject;
     private MockHttpServletRequest mockHttpServletRequest;
     private MockHttpServletResponse mockHttpServletResponse;
+    private MockHttpSession session;
+
 
     //因为集成了Shiro，所以每次测试前需要在线程中绑定subject
     private void shiroLogin(String username,String password){
@@ -59,6 +78,7 @@ class UserControllerTest {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password, true);
         subject.login(token);
         ThreadContext.bind(subject);
+        session = new MockHttpSession();
     }
     @BeforeEach
     void setUp(){
@@ -68,6 +88,7 @@ class UserControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
         SecurityUtils.setSecurityManager(securityManager);
         shiroLogin("1428651289@qq.com","123"+ "/" + MeetHereApplication.salt);
+        session = new MockHttpSession();
     }
 //    @AfterEach
 //    void tearDownShiro(){
@@ -152,22 +173,29 @@ class UserControllerTest {
 
     @Test
     /**
-     * 有问题
-     *multifile格式应该怎么传参
+     * 全覆盖
      */
     void uploadNewsImage() throws Exception{
-        mockMvc.perform(post("/user/newsImage")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .param("file",JSON.toJSONString("test")))
+//        MockMultipartFile file = new MockMultipartFile("file","","application/json","{\"image\":\"/Users/ihsingchang/Pictures/富江.jpg\"}".getBytes());
+        MockMultipartFile file = new MockMultipartFile("file","","application/json","{\"image\":\"/Resources/image/富江.jpg\"}".getBytes());
+        MvcResult result =mockMvc.perform(MockMvcRequestBuilders.multipart("/user/newsImage")
+                .file(file)
+                .session(session)
+                .contentType(MediaType.MULTIPART_FORM_DATA))
                 .andExpect(status().isOk())
-                .andDo(print());
-
+                .andReturn();
+//                .andDo(print());
+        //从数据库中删除测试用的图片
+        String response = result.getResponse().getContentAsString();
+//        System.out.println(response);
+        JSONObject resJson = JSONObject.parseObject(response);
+        String imgUrl = (String) resJson.get("data");
+        newsImageDao.deleteByImageUrl(imgUrl);
     }
 
     @Test
     /**
-     * 后三句未覆盖
-     * images不知道传的对不对
+     * 全覆盖
      */
     void publishNews() throws Exception{
         Map<String,String> params0 = new HashMap<>();
@@ -175,7 +203,8 @@ class UserControllerTest {
         params0.put("password","123");
         mockMvc.perform(post("/user/login")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(JSON.toJSONString(params0)))
+                .content(JSON.toJSONString(params0))
+                .session(session))
                 .andExpect(status().isOk())
                 .andDo(print());
 
@@ -183,10 +212,13 @@ class UserControllerTest {
         params.put("title","test");
         params.put("content","111");
         params.put("text","111");
-        params.put("images","111");
+        List<String> imageUrls = new ArrayList<>();
+        imageUrls.add("http://47.102.142.229:/fff2682b452c4e79a9472d83f078462d.png");
+        params.put("images",imageUrls);
         mockMvc.perform(post("/user/news")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(JSON.toJSONString(params)))
+                .content(JSON.toJSONString(params))
+                .session(session))
                 .andExpect(status().isOk())
                 .andDo(print());
     }
@@ -218,6 +250,29 @@ class UserControllerTest {
 //                .andExpect(status().isOk())
 //                .andExpect(content().json("{'status':'fail'}"))
 //                .andDo(print());
+    }
+
+    /**
+     *  全覆盖
+     * @throws Exception
+     */
+    @Test
+    void deleteNewsByNewsId() throws  Exception{
+        News news = new News();
+        news.setContent("111");
+        news.setText("111");
+        news.setUserId(-1L);
+        news.setTime(LocalDateTime.now());
+        news.setTitle("111");
+
+        newsDao.save(news);
+
+        String newsId = news.getNewsId().toString();
+
+        mockMvc.perform(MockMvcRequestBuilders.delete("/user/news/"+newsId))
+                .andExpect(status().isOk())
+                .andDo(print());
+
     }
 
 }
