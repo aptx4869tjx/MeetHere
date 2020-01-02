@@ -5,6 +5,7 @@ import com.tjx.MeetHere.MeetHereApplication;
 import com.tjx.MeetHere.controller.viewObject.NewsVO;
 
 import com.tjx.MeetHere.error.BusinessException;
+import com.tjx.MeetHere.error.ErrorEm;
 import com.tjx.MeetHere.response.CommonReturnType;
 
 import com.tjx.MeetHere.service.PictureService;
@@ -45,6 +46,9 @@ public class UserController extends BaseController {
         String username = (String) params.get("username");
         String email = (String) params.get("email");
         String password = (String) params.get("password");
+        if(password==null||password.equals("")){
+            throw new BusinessException(ErrorEm.PARAMETER_VALIDATION_ERROR,"密码不能为空");
+        }
         UserModel userModel = new UserModel();
         userModel.setEmail(email);
         userModel.setUserName(username);
@@ -61,6 +65,7 @@ public class UserController extends BaseController {
         String password = (String) params.get("password");
 
         UserModel userModel = userService.validateLogin(email, password);
+        System.out.println("用户"+email+"验证通过");
         this.httpServletRequest.getSession().setAttribute("isLogin", true);
         this.httpServletRequest.getSession().setAttribute("loginUser", userModel);
         return new CommonReturnType(userModel);

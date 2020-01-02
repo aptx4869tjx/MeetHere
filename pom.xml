@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.tjx</groupId>
     <artifactId>MeetHere</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.9-SNAPSHOT</version>
     <name>MeetHere</name>
     <description>meet here</description>
 

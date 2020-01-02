@@ -58,7 +58,7 @@ public class VenueController extends BaseController {
     }
 
     //预约场馆（更新信息）
-    @RequestMapping(method = RequestMethod.PATCH, value = "/venue/{venueId}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/venue/{venueId}")
     public CommonReturnType updateVenueStatus(@PathVariable("venueId") Long venueId, @RequestBody Map<String, Object> params) throws BusinessException {
         Boolean isLogin = (Boolean) httpServletRequest.getSession().getAttribute("isLogin");
         if (isLogin == null || !isLogin) {

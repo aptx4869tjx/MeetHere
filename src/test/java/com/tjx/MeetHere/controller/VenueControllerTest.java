@@ -130,7 +130,7 @@ class VenueControllerTest {
         Map<String, Object> params = new HashMap<>();
         params.put("date", "2019年12月5日");
         params.put("selectedTimeSlots", new int[]{16, 17});
-        mockMvc.perform(patch("/venue/35").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(put("/venue/35").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSON.toJSONString(params)))
                 .andExpect(status().isOk())
                 .andDo(print());
@@ -169,7 +169,7 @@ class VenueControllerTest {
         String date = LocalDateTime.now().plusDays(3L).format(DateTimeFormatter.ofPattern("yyyy年MM月dd日"));
         params.put("date", date);
         params.put("selectedTimeSlots", new int[]{16, 17});
-        mockMvc.perform(patch("/venue/"+venueId)
+        mockMvc.perform(put("/venue/"+venueId)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSON.toJSONString(params))
                 .session(session))
@@ -205,7 +205,7 @@ class VenueControllerTest {
         params1.put("price",1.0);
         params1.put("site","test");
         params1.put("timeSlots","16,17");
-        mockMvc.perform(patch("/venue/35").contentType(MediaType.APPLICATION_JSON_UTF8)
+        mockMvc.perform(put("/venue/35").contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(JSON.toJSONString(params1)))
                 .andExpect(status().isOk())
                 .andDo(print());
